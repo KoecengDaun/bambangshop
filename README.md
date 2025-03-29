@@ -93,4 +93,17 @@ Untuk aplikasi yang harus menangani banyak *subscriber* secara paralel, **`DashM
 
 #### Reflection Publisher-2
 
+##### **1. Mengapa saya perlu memisahkan “Service” dan “Repository” dari Model pada pola MVC?**  
+Secara prinsip, saya ingin menjaga tanggung jawab (*responsibility*) tiap komponen agar jelas. Model dalam MVC sebenarnya sudah mencakup data storage dan logika bisnis, tetapi pada praktiknya, menempatkan semua logika di satu tempat dapat membingungkan. Dengan memecahkannya:
+- **Repository** berfokus pada akses data (misalnya ke database atau struktur penyimpanan).  
+- **Service** menangani logika bisnis (misalnya validasi, notifikasi, panggilan ke repository).  
+
+Pendekatan ini membuat kode saya lebih mudah dirawat, diuji, dan dikembangkan. Jika terjadi perubahan cara penyimpanan data (misalnya beralih dari `HashMap` ke database lain), saya cukup menyesuaikannya di lapisan Repository tanpa menggangu logika di Service.
+
+##### **2. Apa yang terjadi jika saya hanya memakai Model?**  
+Jika seluruh fungsi *CRUD* (tambah, hapus, dll.) dan logika bisnis (mis. notifikasi ke `Subscriber`) digabung dalam satu Model, kodenya akan menumpuk di satu tempat. Bayangkan ada tiga model berbeda – `Program`, `Subscriber`, dan `Notification` – lalu semua saling memanggil fungsi model lain. Hasilnya bisa sangat rumit: saya harus menelusuri banyak fungsi bercampur untuk sekadar mengubah satu alur bisnis. Dengan memisahkan *Service* dan *Repository*, perubahan di satu aspek tidak memicu perubahan tak terduga di bagian lain.
+
+##### **3. Bagaimana Postman membantu saya?**  
+Saya menggunakan Postman untuk menguji semua *endpoint* HTTP yang baru saya buat, seperti `POST /subscribe` atau `DELETE /product/{id}`. Postman memudahkan saya mengatur berbagai *request* dalam satu koleksi, lengkap dengan *environment variable* dan *authentication* (jika dibutuhkan). Selain itu, fitur seperti *tests* dan *documentation* bawaan Postman sangat membantu saya mengotomatisasi pengecekan respons, serta memudahkan tim memahami bagaimana cara memanggil *endpoint* tersebut. Untuk pekerjaan kelompok atau proyek di masa depan, kemampuan Postman melakukan *collection runner* juga memudahkan saya melakukan pengujian terstruktur secara cepat.
+
 #### Reflection Publisher-3
