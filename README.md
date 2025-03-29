@@ -76,8 +76,6 @@ This is the place for you to write reflections:
 
 ### Mandatory (Publisher) Reflections
 
-
-
 #### Reflection Publisher-1
 
 ##### **1. Apakah saya masih memerlukan interface/trait dalam BambangShop?**  
@@ -107,3 +105,12 @@ Jika seluruh fungsi *CRUD* (tambah, hapus, dll.) dan logika bisnis (mis. notifik
 Saya menggunakan Postman untuk menguji semua *endpoint* HTTP yang baru saya buat, seperti `POST /subscribe` atau `DELETE /product/{id}`. Postman memudahkan saya mengatur berbagai *request* dalam satu koleksi, lengkap dengan *environment variable* dan *authentication* (jika dibutuhkan). Selain itu, fitur seperti *tests* dan *documentation* bawaan Postman sangat membantu saya mengotomatisasi pengecekan respons, serta memudahkan tim memahami bagaimana cara memanggil *endpoint* tersebut. Untuk pekerjaan kelompok atau proyek di masa depan, kemampuan Postman melakukan *collection runner* juga memudahkan saya melakukan pengujian terstruktur secara cepat.
 
 #### Reflection Publisher-3
+
+##### **1. Model Observer mana yang saya gunakan di tutorial ini?**  
+Saya menerapkan *Push Model* di mana *publisher* (Main App) secara otomatis mengirimkan notifikasi ke setiap *subscriber* ketika terjadi peristiwa (misalnya pembuatan atau penghapusan produk). Dengan demikian, *subscriber* cukup menunggu (*passive*) dan langsung menerima data yang dipush oleh *publisher*.  
+
+##### **2. Bagaimana kelebihan dan kekurangan jika memakai model lain (Pull Model)?**  
+Jika saya menggunakan *Pull Model*, *publisher* hanya akan memberi tahu bahwa ada perubahan, namun *subscriber*-lah yang harus meminta (*pull*) data detailnya. Kelebihannya, beban data yang dikirim bisa lebih efisien karena *subscriber* bisa mengambil informasi spesifik yang dibutuhkan. Di sisi lain, kekurangannya adalah *subscriber* harus lebih aktif dan kompleks dalam pemanggilan data ke *publisher*. Untuk kasus BambangShop yang relatif sederhana, *Push Model* dirasa lebih praktis karena *subscriber* segera mendapat seluruh data notifikasi tanpa harus meminta ulang.  
+
+##### **3. Apa yang terjadi jika saya tidak menggunakan *multi-threading* dalam proses notifikasi?**  
+Apabila notifikasi dijalankan secara *serial* dalam satu *thread*, proses mengirim notifikasi ke setiap *subscriber* berpotensi memblokir operasi utama. Aplikasi bisa menjadi lambat atau bahkan tidak responsif jika jumlah *subscriber* banyak, karena setiap pemanggilan HTTP ke subscriber dilakukan bergantian. Dengan *multi-threading*, saya dapat memanggil *subscriber* secara paralel, sehingga kinerja *publisher* tidak terganggu saat menunggu respon dari berbagai *subscriber*.
