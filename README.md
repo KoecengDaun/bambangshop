@@ -76,7 +76,20 @@ This is the place for you to write reflections:
 
 ### Mandatory (Publisher) Reflections
 
+
+
 #### Reflection Publisher-1
+
+##### **1. Apakah saya masih memerlukan interface/trait dalam BambangShop?**  
+Dalam buku *Head First Design Patterns*, “Subscriber” didefinisikan sebagai interface agar berbagai objek berbeda bisa menjadi *subscriber*. Namun, di BambangShop, saya hanya memerlukan satu tipe *subscriber* yang menyimpan `url` dan menerima notifikasi melalui HTTP. **Karena fungsinya seragam**, saya bisa memakai satu *struct* biasa saja tanpa trait tambahan. Jika di masa depan diperlukan beberapa variasi *subscriber* dengan perilaku berbeda, barulah trait `Subscriber` menjadi relevan.
+
+##### **2. Apakah penggunaan `Vec` memadai atau perlu `DashMap`?**  
+Jika saya memakai `Vec`, saya harus melakukan pencarian dan penghapusan data secara linear (O(n)) serta membuat mekanisme manual untuk memastikan `url` atau `id` unik. Di sisi lain, `DashMap` memudahkan saya untuk melakukan *insert*, *lookup*, dan *delete* secara cepat (rata-rata O(1)) sambil tetap *thread-safe*.  
+Untuk aplikasi yang harus menangani banyak *subscriber* secara paralel, **`DashMap` jauh lebih efisien**. Jika skenario saya sangat kecil dan tidak kritis soal kinerja, `Vec` boleh saja dipakai, tetapi pada umumnya `DashMap` adalah opsi yang aman dan praktis.
+
+##### **3. Masih perlu `DashMap` atau cukup *Singleton*?**  
+*Singleton* hanya memastikan ada satu instance global, tetapi tidak otomatis membuat data tersebut aman diakses banyak *thread* secara bersamaan. Saya tetap perlu mekanisme *thread-safe* tambahan, misalnya `Mutex`, `RwLock`, atau struktur data yang sudah mendukung *concurrency*.  
+`DashMap` sudah mencakup *thread safety* dan pembagian *lock* internal (sharding), sehingga lebih efisien. Singkatnya, **saya tetap perlu struktur *thread-safe*** seperti `DashMap`, meskipun instance-nya diakses secara *singleton*.
 
 #### Reflection Publisher-2
 
